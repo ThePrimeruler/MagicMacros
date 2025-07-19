@@ -1,7 +1,7 @@
 @tool
 extends MagicMacrosMacro
 
-const ALIASES: Array[String] = ["init"]
+const ALIASES: Array[String] = ["prc", "process", "proc"]
 
 
 static func is_macro_alias(arg: String) -> bool:
@@ -10,7 +10,7 @@ static func is_macro_alias(arg: String) -> bool:
 
 static func apply_macro(_line_data: MagicMacrosLineData) -> String:
     var s: String = ""
-    s += "func _init() -> void:"
+    s += "func _process(delta: float) -> void:"
     s += "\n"
     s += "    pass"
 
