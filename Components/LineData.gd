@@ -136,7 +136,7 @@ func _get_indentation() -> String:
 	var i: String = ""
 
 	for c: String in source_text:
-		if c in [" ", "    "]:
+		if c in [" ", "\t"]:
 			i += c
 			continue
 		break
