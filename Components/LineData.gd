@@ -14,17 +14,17 @@ var source_text: String = ""
 
 ## The output of the macro
 var modified_text: String:
-    get:
-        if not is_valid:
-            return source_text
-        return detected_macro.call(_plugin.macros_apply_func, self)
+	get:
+		if not is_valid:
+			return source_text
+		return detected_macro.call(_plugin.macros_apply_func, self)
 
 ## The output of the reminder function
 var reminder_text: String:
-    get:
-        if not is_valid:
-            return source_text
-        return detected_macro.call(_plugin.macros_reminder_func, self)
+	get:
+		if not is_valid:
+			return source_text
+		return detected_macro.call(_plugin.macros_reminder_func, self)
 
 ## The macro applicable to this line, if any
 var detected_macro: Script
@@ -37,11 +37,11 @@ var identifier_args: Array[String] = []
 
 ## true if there is an identifier
 var has_identifier: bool:
-    get: return not identifier_args.is_empty()
+	get: return not identifier_args.is_empty()
 
 ## Convenience helper value for retrieving the first identifier in the line.
 var identifier: String:
-    get: return identifier_args[0] if has_identifier else DEFAULT_IDENTIFIER
+	get: return identifier_args[0] if has_identifier else DEFAULT_IDENTIFIER
 
 ## Types detected within the line
 ## Types are always PascalCase, follows GDScript style guide
@@ -49,25 +49,25 @@ var type_args: Array[String] = []
 
 ## true if there is a type section
 var has_type: bool:
-    get: return not type_args.is_empty()
+	get: return not type_args.is_empty()
 
 ## Convenience helper value for retrieving the first type in the line.
 var type: String:
-    get: return type_args[0] if has_type else DEFAULT_TYPE
+	get: return type_args[0] if has_type else DEFAULT_TYPE
 
 ## Any remaining arguments that are not identifiers or types
 var remainder_args: Array[String] = []
 
 ## true if there is a remainder section
 var has_remainder: bool:
-    get: return not remainder_args.is_empty()
+	get: return not remainder_args.is_empty()
 
 ## Convenience helper value for retreiving the first remainder value.
 var remainder: String:
-    get: return remainder_args[0] if has_remainder else DEFAULT_REMAINDER
+	get: return remainder_args[0] if has_remainder else DEFAULT_REMAINDER
 
 var is_valid: bool:
-    get: return true if detected_macro else false
+	get: return true if detected_macro else false
 
 ## Reference to the plugin script
 var _plugin: MagicMacros
@@ -77,95 +77,95 @@ var _indent: String = ""
 
 ## returns the line's indentation
 var indent: String:
-    get: return _indent
+	get: return _indent
 
 ## internal, string of the system's default indentation
 var _system_default_indent:String = '\t' if EditorInterface.get_editor_settings().get_setting('text_editor/behavior/indent/type') == 0 else '    '
 
 ## returns a single indentation, trying to match line's indentation type
 var single_indent:String:
-    get: return '\t' if '\t' in _indent else ('    ' if '    ' in _indent else _system_default_indent)
+	get: return '\t' if '\t' in _indent else ('    ' if '    ' in _indent else _system_default_indent)
 
 
 func _init(plugin: MagicMacros, line_id: int, line_text: String) -> void:
-    _plugin = plugin
-    line_index = line_id
-    source_text = line_text
+	_plugin = plugin
+	line_index = line_id
+	source_text = line_text
 
-    _parse_line()
+	_parse_line()
 
 ## internal function
 func _parse_line() -> void:
-    # Count only tabs in the beginning of the line
-    # and remember line indentation
-    _indent = _get_indentation()
+	# Count only tabs in the beginning of the line
+	# and remember line indentation
+	_indent = _get_indentation()
 
-    # Replace tabs in line and get the individual arguments
-    var args: PackedStringArray = source_text.replace("    ", "").split(" ", false)
-    if args.is_empty():
-        return
+	# Replace tabs in line and get the individual arguments
+	var args: PackedStringArray = source_text.replace("    ", "").split(" ", false)
+	if args.is_empty():
+		return
 
-    # The first argument must be a macro argument
-    # Eg. 'fn' or 'rdy'
-    if _arg_is_macro(args[0]):
-        macro_arg = args[0]
-        args.remove_at(0)
+	# The first argument must be a macro argument
+	# Eg. 'fn' or 'rdy'
+	if _arg_is_macro(args[0]):
+		macro_arg = args[0]
+		args.remove_at(0)
 
-    var types: Array[String] = []
-    var identifiers: Array[String] = []
-    var remainders: Array[String] = []
+	var types: Array[String] = []
+	var identifiers: Array[String] = []
+	var remainders: Array[String] = []
 
-    # Detect and sort arguments by category.
-    for arg: String in args:
-        if _arg_is_type(arg):
-            types.append(arg)
-        elif _arg_is_identifier(arg):
-            identifiers.append(arg)
-        else:
-            remainders.append(arg)
+	# Detect and sort arguments by category.
+	for arg: String in args:
+		if _arg_is_type(arg):
+			types.append(arg)
+		elif _arg_is_identifier(arg):
+			identifiers.append(arg)
+		else:
+			remainders.append(arg)
 
-    type_args = types
-    identifier_args = identifiers
-    remainder_args = remainders
+	type_args = types
+	identifier_args = identifiers
+	remainder_args = remainders
 
-    # Retrieve the macro
-    detected_macro = _get_macro_script()
+	# Retrieve the macro
+	detected_macro = _get_macro_script()
 
 ## internal function
 func _get_indentation() -> String:
-    var i: String = ""
+	var i: String = ""
 
-    for c: String in source_text:
-        if c in [" ", "    "]:
-            i += c
-            continue
-        break
+	for c: String in source_text:
+		if c in [" ", "    "]:
+			i += c
+			continue
+		break
 
-    return i
+	return i
 
 ## internal function
 func _arg_is_macro(arg: String) -> bool:
-    for macro: Script in _plugin.macros:
-        # Will return a bool. See MagicMacroMacro for this.
-        if macro.call(_plugin.macros_alias_func, arg):
-            return true
-    return false
+	for macro: Script in _plugin.macros:
+		# Will return a bool. See MagicMacroMacro for this.
+		if macro.call(_plugin.macros_alias_func, arg):
+			return true
+	return false
 
 ## internal function
 func _arg_is_type(arg: String) -> bool:
-    if arg in NON_PASCAL_TYPES:
-        return true
+	if arg in NON_PASCAL_TYPES:
+		return true
 
-    return _plugin.is_pascal_case(arg)
+	return _plugin.is_pascal_case(arg)
 
 ## internal function
 func _arg_is_identifier(arg: String) -> bool:
-    return _plugin.is_snake_case(arg)
+	return _plugin.is_snake_case(arg)
 
 ## internal function
 func _get_macro_script() -> Script:
-    for macro: Script in _plugin.macros:
-        var matches: bool = macro.call(_plugin.macros_alias_func, macro_arg)
-        if matches:
-            return macro
-    return null
+	for macro: Script in _plugin.macros:
+		var matches: bool = macro.call(_plugin.macros_alias_func, macro_arg)
+		if matches:
+			return macro
+	return null
