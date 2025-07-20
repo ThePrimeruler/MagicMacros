@@ -53,4 +53,7 @@ mono_crash.*.json
 !_exports/.gitignore
 *.lnk
 *.psd
+
+# IDE Settings ignores #
+############################
 .vscode
