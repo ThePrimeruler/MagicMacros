@@ -174,6 +174,7 @@ func _update_line_color() -> void:
 	else:
 		base.remove_theme_color_override(THEME_COLOR_CONSTANT)
 
+## internal, updates the reminder label if [constant MagicMacros.USE_REMINDER] is true
 func _update_reminder_label() -> void:
 	if not USE_REMINDER:
 		return
