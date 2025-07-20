@@ -21,7 +21,7 @@ const THEME_COLOR_VALID: Color = Color(0.0, 1.0, 0.0, 0.15)
 ## regex patterns used for argument detection. See LineData
 const PASCAL_CASE_REGEX_PATTERN: String = '^[A-Z][a-zA-Z0-9]*$'
 ## regex patterns used for argument detection. See LineData
-const SNAKE_CASE_REGEX_PATTERN: String = '^[a-z][a-z0-9_]*$'
+const SNAKE_CASE_REGEX_PATTERN: String = '^[a-z_][a-z0-9_]*$'
 
 ## regex used for argument detection. See LineData
 var pascal_case_regex: RegEx
