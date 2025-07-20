@@ -10,10 +10,10 @@ static func is_macro_alias(arg: String) -> bool:
 	return arg in ALIASES
 
 
-static func apply_macro(_line_data: MagicMacrosLineData) -> String:
+static func apply_macro(line_data: MagicMacrosLineData) -> String:
 	var s: String = ""
 	s += "func _process(delta: float) -> void:"
 	s += "\n"
-	s += "    pass"
+	s += line_data.single_indent + "pass"
 
 	return s

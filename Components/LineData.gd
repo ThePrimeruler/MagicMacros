@@ -100,8 +100,8 @@ func _parse_line() -> void:
 	# and remember line indentation
 	_indent = _get_indentation()
 
-	# Replace tabs in line and get the individual arguments
-	var args: PackedStringArray = source_text.replace("    ", "").split(" ", false)
+	# Replace tabs and spaces in line and get the individual arguments
+	var args: PackedStringArray = source_text.replace("    ", "").replace("\t", "").split(" ", false)
 	if args.is_empty():
 		return
 
