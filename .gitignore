@@ -53,3 +53,4 @@ mono_crash.*.json
 !_exports/.gitignore
 *.lnk
 *.psd
+.vscode
