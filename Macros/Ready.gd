@@ -14,6 +14,6 @@ static func apply_macro(line_data: MagicMacrosLineData) -> String:
 	var s: String = ""
 	s += "func _ready() -> void:"
 	s += "\n"
-	s += line_data.single_indent + "pass"
+	s += line_data.s_in + "pass"
 
 	return s

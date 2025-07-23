@@ -9,11 +9,10 @@ static func get_reminder(line_data: MagicMacrosLineData) -> String:
 static func is_macro_alias(arg: String) -> bool:
 	return arg in ALIASES
 
-
 static func apply_macro(line_data: MagicMacrosLineData) -> String:
 	var s: String = ""
 	s += "func _init() -> void:"
 	s += "\n"
-	s += line_data.single_indent + "pass"
+	s += line_data.s_in + "pass"
 
 	return s

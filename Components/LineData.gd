@@ -31,6 +31,9 @@ var detected_macro: Script
 ## The argument with which the macro is detected.
 var macro_arg: String = ""
 
+## All the args detected within the line
+var all_args: Array[String] = []
+
 ## Identifiers detected within the line
 ## identifiers are always snake_case, follows GDScript style guide
 var identifier_args: Array[String] = []
@@ -83,7 +86,7 @@ var indent: String:
 var _system_default_indent:String = '\t' if EditorInterface.get_editor_settings().get_setting('text_editor/behavior/indent/type') == 0 else '    '
 
 ## returns a single indentation, trying to match line's indentation type
-var single_indent:String:
+var s_in:String:
 	get: return '\t' if '\t' in _indent else ('    ' if '    ' in _indent else _system_default_indent)
 
 
@@ -111,12 +114,14 @@ func _parse_line() -> void:
 		macro_arg = args[0]
 		args.remove_at(0)
 
+	var all_arg: Array[String] = []
 	var types: Array[String] = []
 	var identifiers: Array[String] = []
 	var remainders: Array[String] = []
 
 	# Detect and sort arguments by category.
 	for arg: String in args:
+		all_arg.append(arg)
 		if _arg_is_type(arg):
 			types.append(arg)
 		elif _arg_is_identifier(arg):
@@ -124,6 +129,7 @@ func _parse_line() -> void:
 		else:
 			remainders.append(arg)
 
+	all_args = all_arg
 	type_args = types
 	identifier_args = identifiers
 	remainder_args = remainders
@@ -156,11 +162,42 @@ func _arg_is_type(arg: String) -> bool:
 	if arg in NON_PASCAL_TYPES:
 		return true
 
-	return _plugin.is_pascal_case(arg)
+	if _plugin.is_pascal_case(arg):
+		return true
+	# enum var like Enum.Value
+	if '.' not in arg:
+		return false
+	var split_args:PackedStringArray = arg.rsplit('.',true,1)
+	var left_side:String = split_args[0]
+	var right_side:String = split_args[-1]
+	if not _plugin.is_pascal_case(right_side): # last part should be pascal case
+		return false
+	for sub_arg in left_side.split('.'): # loop though right side (imagine AutoLoad.some_node.Enum)
+		if not (_plugin.is_snake_case(sub_arg) or _plugin.is_pascal_case(sub_arg)):
+			return false
+	return true
+
 
 ## internal function
 func _arg_is_identifier(arg: String) -> bool:
-	return _plugin.is_snake_case(arg)
+	# standard case 'identifier_here'
+	if _plugin.is_snake_case(arg):
+		return true
+	# class var like Something.variable
+	if '.' not in arg:
+		return false
+	var split_args:PackedStringArray = arg.rsplit('.',true,1)
+	var left_side:String = split_args[0]
+	var right_side:String = split_args[-1]
+	if not _plugin.is_snake_case(right_side): # last part should be snake case
+		return false
+	for sub_arg in left_side.split('.'): # loop though right side (imagine AutoLoad.some_node.value)
+		if not (_plugin.is_snake_case(sub_arg) or _plugin.is_pascal_case(sub_arg)):
+			return false
+	return true
+
+
+
 
 ## internal function
 func _get_macro_script() -> Script:

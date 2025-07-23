@@ -1,10 +1,11 @@
 @tool
 extends MagicMacrosMacro
 
-const ALIASES: Array[String] = ["macros"]
+const ALIASES: Array[String] = ["macros", 'macro', 'mac']
 
 static func get_reminder(line_data: MagicMacrosLineData) -> String:
-	return apply_macro(line_data)
+	var macro_body:String = '[macro file name] : [macro aliases]'
+	return ' %s\n[center]═══════[/center]\n%s' % [macro_body, apply_macro(line_data)]
 
 
 static func is_macro_alias(arg: String) -> bool:

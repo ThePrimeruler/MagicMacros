@@ -1,10 +1,8 @@
 @tool
 class_name MagicMacros
 extends EditorPlugin
-## [b]MagicMacros[/b]
-## [br]
-## Godot Addon for enhanced autocomplete and code snippets [br]
-## [b]What does this do?[/b][br]
+## MagicMacros - Godot Addon for enhanced autocomplete and code snippets
+##
 ## This addon integrates with the Script Editor in Godot.
 ## It will scan the currently edited line for a pattern that fits one of the loaded macros, and when it finds a match highlight the line in green.
 ## Pressing tab will execute the macro on the contents of the line.
@@ -206,10 +204,21 @@ func _update_reminder_label() -> void:
 		_reminder_label.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		base.add_child(_reminder_label)
 		_reminder_label.set_position(base.get_caret_draw_pos() + Vector2(-20,-(_reminder_label.size.y+20)))
-
+		if base.is_connected("gui_input", _on_editor_scroll):
+			base.disconnect("gui_input", _on_editor_scroll)
+		base.connect("gui_input", _on_editor_scroll)
 	else:
 		if _reminder_label:
 			_reminder_label.queue_free()
+
+## internal, removes the reminder label when you scroll
+func _on_editor_scroll(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.is_pressed():
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			if _reminder_label:
+				_reminder_label.queue_free()
+			var base: TextEdit = _current_editor.get_base_editor()
+			base.disconnect("gui_input", _on_editor_scroll)
 
 ## internal, function called to activate macro
 func _on_tab_pressed() -> void:

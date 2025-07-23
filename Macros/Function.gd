@@ -37,8 +37,8 @@ static func get_reminder(line_data: MagicMacrosLineData) -> String:
 		index += 1
 	var filled_args: String = ' '+' '.join(func_args) if func_args else ''
 
-	var empty_arg_name: String =  line_data.identifier_args[index] if len(line_data.identifier_args) > index else '[b][func arg name]?[/b]'
-	var empty_arg_type: String =  line_data.type_args[index] if len(line_data.type_args) > index else '[b][func arg type]?[/b]'
+	var empty_arg_name: String =  line_data.identifier_args[index] if len(line_data.identifier_args) > index else '[b][arg name]?[/b]'
+	var empty_arg_type: String =  line_data.type_args[index] if len(line_data.type_args) > index else '[b][arg type]?[/b]'
 
 
 	var empty_args: String = ' %s %s'%[empty_arg_name,empty_arg_type] if line_data.has_identifier and line_data.has_type else ''
@@ -62,5 +62,5 @@ static func apply_macro(line_data: MagicMacrosLineData) -> String:
 
 	var s: String = ""
 	s += line_data.indent + "func %s(%s) -> %s:\n" % [line_data.identifier, ', '.join(func_args), line_data.type]
-	s += line_data.indent + line_data.single_indent + "pass"
+	s += line_data.indent + line_data.s_in + "pass"
 	return s

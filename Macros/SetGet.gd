@@ -35,9 +35,9 @@ static func apply_macro(line_data: MagicMacrosLineData) -> String:
 	var first_line: String = line_data.indent + "var %s"%line_data.identifier + (": %s"%line_data.type if line_data.has_type else "") + (" = %s"%remainder_sum if remainder_sum else "") + ":\n"
 	var s: String = ""
 	s += first_line
-	s += line_data.indent + line_data.single_indent + "set(value):\n"
-	s += line_data.indent + line_data.single_indent + line_data.single_indent + "%s = value\n" % line_data.identifier
-	s += line_data.indent + line_data.single_indent + "get:\n"
-	s += line_data.indent + line_data.single_indent + line_data.single_indent +  "return %s\n" % line_data.identifier
+	s += line_data.indent + line_data.s_in + "set(value):\n"
+	s += line_data.indent + line_data.s_in + line_data.s_in + "%s = value\n" % line_data.identifier
+	s += line_data.indent + line_data.s_in + "get:\n"
+	s += line_data.indent + line_data.s_in + line_data.s_in +  "return %s\n" % line_data.identifier
 
 	return s
